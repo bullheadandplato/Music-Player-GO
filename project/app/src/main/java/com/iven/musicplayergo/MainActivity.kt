@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.preference.Preference
 import androidx.viewpager.widget.ViewPager
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
@@ -222,10 +223,10 @@ class MainActivity : AppCompatActivity(), UIControlInterface, CoroutineScope by 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(ThemeHelper.getAccentedTheme().first)
         super.onCreate(savedInstanceState)
 
         //set ui theme
-        setTheme(ThemeHelper.getAccentedTheme().first)
 
         setContentView(R.layout.main_activity)
 
