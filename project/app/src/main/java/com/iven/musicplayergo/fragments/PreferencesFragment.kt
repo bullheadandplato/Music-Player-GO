@@ -75,19 +75,19 @@ class PreferencesFragment : PreferenceFragmentCompat(),
 
         activity?.let { fragmentActivity ->
 
-            findPreference<Preference>(getString(R.string.open_git_pref))?.onPreferenceClickListener =
+            findPreference(getString(R.string.open_git_pref))?.onPreferenceClickListener =
                 this
 
-            findPreference<Preference>(getString(R.string.faq_pref))?.onPreferenceClickListener =
+            findPreference(getString(R.string.faq_pref))?.onPreferenceClickListener =
                 this
 
-            findPreference<Preference>(getString(R.string.accent_pref))?.apply {
+            findPreference(getString(R.string.accent_pref))?.apply {
                 summary =
                     ThemeHelper.getAccentName(goPreferences.accent, fragmentActivity)
                 onPreferenceClickListener = this@PreferencesFragment
             }
 
-            findPreference<Preference>(getString(R.string.active_fragments_pref))?.apply {
+            findPreference(getString(R.string.active_fragments_pref))?.apply {
                 summary = goPreferences.activeFragments?.size.toString()
                 onPreferenceClickListener = this@PreferencesFragment
             }
