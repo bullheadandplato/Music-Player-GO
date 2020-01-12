@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
@@ -19,7 +20,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.preference.Preference
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
@@ -32,13 +34,15 @@ import com.iven.musicplayergo.adapters.QueueAdapter
 import com.iven.musicplayergo.fragments.*
 import com.iven.musicplayergo.music.Music
 import com.iven.musicplayergo.music.MusicUtils
+import com.iven.musicplayergo.music.MusicViewModel
 import com.iven.musicplayergo.player.*
 import com.iven.musicplayergo.ui.ThemeHelper
 import com.iven.musicplayergo.ui.UIControlInterface
 import com.iven.musicplayergo.ui.Utils
+import de.halfbit.edgetoedge.Edge
+import de.halfbit.edgetoedge.edgeToEdge
 import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.player_controls_panel.*
-import kotlinx.coroutines.*
 import kotlin.properties.Delegates
 
 const val RESTORE_SETTINGS_FRAGMENT = "restore_settings_fragment_key"
@@ -49,7 +53,7 @@ private const val FOLDERS_FRAGMENT_ACTIVE = "2"
 private const val SETTINGS_FRAGMENT_ACTIVE = "3"
 
 @Suppress("UNUSED_PARAMETER")
-class MainActivity : AppCompatActivity(), UIControlInterface, CoroutineScope by MainScope() {
+class MainActivity : AppCompatActivity(), UIControlInterface {
 
     //colors
     private var mResolvedAccentColor: Int by Delegates.notNull()
@@ -110,6 +114,10 @@ class MainActivity : AppCompatActivity(), UIControlInterface, CoroutineScope by 
 
 
     //music player things
+
+    private val mMusicViewModel: MusicViewModel by lazy {
+        ViewModelProviders.of(this).get(MusicViewModel::class.java)
+    }
 
     private var mAllDeviceSongs: MutableList<Music>? = null
 
@@ -214,24 +222,29 @@ class MainActivity : AppCompatActivity(), UIControlInterface, CoroutineScope by 
             ) else launchMusicLoading()
     }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        if (goPreferences.isEdgeToEdge && !sDeviceLand && window != null) ThemeHelper.handleEdgeToEdge(
-            window,
-            mainView
-        )
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(ThemeHelper.getAccentedTheme().first)
         super.onCreate(savedInstanceState)
 
         //set ui theme
+        setTheme(ThemeHelper.getAccentedTheme().first)
 
         setContentView(R.layout.main_activity)
 
         //init views
         getViewsAndResources()
+
+        if (goPreferences.isEdgeToEdge) {
+            window?.apply {
+                if (!Utils.isAndroidQ()) {
+                    statusBarColor = Color.TRANSPARENT
+                    navigationBarColor = Color.TRANSPARENT
+                }
+                ThemeHelper.handleLightSystemBars(decorView)
+            }
+            edgeToEdge {
+                mainView.fit { Edge.Top + Edge.Bottom }
+            }
+        }
 
         setupControlsPanelSpecs()
 
@@ -284,42 +297,18 @@ class MainActivity : AppCompatActivity(), UIControlInterface, CoroutineScope by 
     }
 
     private fun launchMusicLoading() {
-        launch {
-            callLoadAllMusic()
-        }
-    }
 
-    private suspend fun callLoadAllMusic() {
-
-        val result = loadAllMusic()
-
-        withContext(Dispatchers.Main) {
+        mMusicViewModel.musicLiveData.observe(this, Observer { result ->
             if (!result.isNullOrEmpty()) {
-
                 mAllDeviceSongs = result
-
+                musicLibrary.buildLibrary(this, mAllDeviceSongs)
                 finishSetup()
-
             } else {
-
-                Utils.makeToast(
-                    this@MainActivity,
-                    getString(R.string.error_unknown),
-                    Toast.LENGTH_LONG
-                )
-                finishAndRemoveTask()
+                Utils.notifyLoadingError(this)
             }
-        }
-    }
+        })
 
-    private suspend fun loadAllMusic(): MutableList<Music>? {
-        return withContext(Dispatchers.Default) {
-
-            val music = musicLibrary.queryForMusic(this@MainActivity)
-            if (!music.isNullOrEmpty()) musicLibrary.buildLibrary(this@MainActivity, music)
-
-            return@withContext music
-        }
+        mMusicViewModel.loadMusic()
     }
 
     private fun finishSetup() {
@@ -534,7 +523,7 @@ class MainActivity : AppCompatActivity(), UIControlInterface, CoroutineScope by 
     /**
     UI related methods
      */
-    private fun setFixedMusicBarProgressListener() {
+    private fun setSeekBarProgressListener() {
 
         mSeekBarNP.setOnSeekBarChangeListener(
             object : SeekBar.OnSeekBarChangeListener {
@@ -676,7 +665,7 @@ class MainActivity : AppCompatActivity(), UIControlInterface, CoroutineScope by 
                     ThemeHelper.updateIconTint(mVolumeNP, mResolvedDisabledIconsColor)
                 }
 
-                setFixedMusicBarProgressListener()
+                setSeekBarProgressListener()
 
                 mRatesTextNP = customView.findViewById(R.id.np_rates)
                 updateNowPlayingInfo()
@@ -684,12 +673,17 @@ class MainActivity : AppCompatActivity(), UIControlInterface, CoroutineScope by 
                 onDismiss {
                     mSeekBarNP.setOnSeekBarChangeListener(null)
                 }
-            }
 
-            if (goPreferences.isEdgeToEdge && !sDeviceLand && mNowPlayingDialog.window != null) ThemeHelper.handleEdgeToEdge(
-                mNowPlayingDialog.window,
-                mNowPlayingDialog.view
-            )
+                if (goPreferences.isEdgeToEdge && !sDeviceLand) {
+                    window?.apply {
+                        ThemeHelper.handleLightSystemBars(decorView)
+                        edgeToEdge {
+                            customView.fit { Edge.Bottom }
+                            decorView.fit { Edge.Top }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -737,7 +731,7 @@ class MainActivity : AppCompatActivity(), UIControlInterface, CoroutineScope by 
 
                 } else {
 
-                    isSongRestoredFromPrefs = goPreferences.latestPlayedSong != null
+                    isSongRestoredFromPrefs = MusicUtils.getSavedSong() != null
 
                     val song =
                         if (isSongRestoredFromPrefs) MusicUtils.getSavedSong()
@@ -836,7 +830,7 @@ class MainActivity : AppCompatActivity(), UIControlInterface, CoroutineScope by 
 
         mSeekBarNP.max = selectedSong.duration.toInt()
 
-        MusicUtils.getBitrate(selectedSong.path)?.let {
+        MusicUtils.getBitrate(MusicUtils.getContentUri(selectedSong.id!!), contentResolver)?.let {
             mRatesTextNP.text = getString(R.string.rates, it.first, it.second)
         }
 
