@@ -16,6 +16,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.animation.doOnEnd
+import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
@@ -28,6 +29,7 @@ import com.afollestad.materialdialogs.callbacks.onShow
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.list.getListAdapter
+import com.bullhead.equalizer.DialogEqualizerFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.iven.musicplayergo.*
@@ -946,6 +948,12 @@ class MainActivity : AppCompatActivity(), UIControlInterface {
 
     fun openEqualizer(view: View) {
         if (checkIsPlayer(true)) mMediaPlayerHolder.openEqualizer(this)
+    }
+
+    fun openEqualizerDialog(){
+       if (checkIsPlayer(true)){
+           mMediaPlayerHolder.openEqualizer(this,true)
+       }
     }
 
     override fun onAddToQueue(song: Music?) {

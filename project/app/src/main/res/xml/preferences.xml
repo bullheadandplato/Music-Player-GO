@@ -86,5 +86,9 @@
         <Preference
             app:key="@string/filter_pref"
             app:title="@string/filter_pref_title" />
+        <Preference
+            android:key="@string/equalizer_pref"
+            app:icon="@drawable/ic_round_equalizer_24"
+            app:title="@string/Equalizer" />
     </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

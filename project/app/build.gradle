@@ -94,4 +94,7 @@ dependencies {
 
     //https://github.com/beworker/edge-to-edge/blob/master/CHANGELOG.md
     implementation 'de.halfbit:edge-to-edge:0.10'
+
+    //https://github.com/bullheadandplato/AndroidEqualizer
+    implementation 'com.github.bullheadandplato:AndroidEqualizer:2.1'
 }

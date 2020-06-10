@@ -4,10 +4,16 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.media.MediaPlayer
 import android.media.audiofx.AudioEffect
+import androidx.core.graphics.ColorUtils
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import com.bullhead.equalizer.DialogEqualizerFragment
 import com.iven.musicplayergo.R
 import com.iven.musicplayergo.extensions.toToast
+import com.iven.musicplayergo.helpers.ThemeHelper
 
 object EqualizerUtils {
 
@@ -35,7 +41,39 @@ object EqualizerUtils {
         }
     }
 
-    internal fun openEqualizer(activity: Activity, mediaPlayer: MediaPlayer) {
+    private fun openEqualizerDialog(
+        context: Context,
+        fragmentManager: FragmentManager,
+        sessionId: Int
+    ) {
+        val accentColor = ThemeHelper.resolveThemeAccent(context)
+        val alphaAccent = ColorUtils.setAlphaComponent(accentColor, 150)
+        val fragment = DialogEqualizerFragment.newBuilder()
+            .setAudioSessionId(sessionId)
+            .themeColor(Color.parseColor("#212121"))
+            .textColor(Color.WHITE)
+            .accentAlpha(alphaAccent)
+            .darkColor(Color.parseColor("#212121"))
+            .setAccentColor(accentColor)
+            .build()
+        fragment.show(fragmentManager, "eq")
+    }
+
+    internal fun openEqualizer(
+        activity: FragmentActivity,
+        mediaPlayer: MediaPlayer,
+        dialog: Boolean = false
+    ) {
+        if (dialog) {
+            if (mediaPlayer.audioSessionId != AudioEffect.ERROR_BAD_VALUE) {
+                openEqualizerDialog(
+                    activity,
+                    activity.supportFragmentManager,
+                    mediaPlayer.audioSessionId
+                )
+            }
+            return
+        }
         if (hasEqualizer(activity))
             when (mediaPlayer.audioSessionId) {
                 AudioEffect.ERROR_BAD_VALUE -> activity.getString(R.string.error_bad_id).toToast(

@@ -9,6 +9,7 @@ import android.media.MediaPlayer
 import android.os.PowerManager
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat.*
+import androidx.fragment.app.FragmentActivity
 import com.iven.musicplayergo.GoConstants
 import com.iven.musicplayergo.MusicRepository
 import com.iven.musicplayergo.R
@@ -425,8 +426,8 @@ class MediaPlayerHolder(private val playerService: PlayerService) :
         }
     }
 
-    fun openEqualizer(activity: Activity) {
-        EqualizerUtils.openEqualizer(activity, mediaPlayer)
+    fun openEqualizer(activity: FragmentActivity,dialog:Boolean=false) {
+        EqualizerUtils.openEqualizer(activity, mediaPlayer,dialog)
     }
 
     fun release() {

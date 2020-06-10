@@ -11,12 +11,15 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.customListAdapter
 import com.afollestad.materialdialogs.list.getRecyclerView
+import com.bullhead.equalizer.DialogEqualizerFragment
 import com.iven.musicplayergo.MusicRepository
 import com.iven.musicplayergo.R
 import com.iven.musicplayergo.adapters.AccentsAdapter
@@ -25,7 +28,9 @@ import com.iven.musicplayergo.adapters.FiltersAdapter
 import com.iven.musicplayergo.extensions.toToast
 import com.iven.musicplayergo.goPreferences
 import com.iven.musicplayergo.helpers.ThemeHelper
+import com.iven.musicplayergo.ui.MainActivity
 import com.iven.musicplayergo.ui.UIControlInterface
+
 
 class PreferencesFragment : PreferenceFragmentCompat(),
     SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
@@ -118,6 +123,10 @@ class PreferencesFragment : PreferenceFragmentCompat(),
             summary = goPreferences.activeFragments.size.toString()
             onPreferenceClickListener = this@PreferencesFragment
         }
+
+        findPreference<Preference>(getString(R.string.equalizer_pref))?.apply {
+            onPreferenceClickListener=this@PreferencesFragment
+        }
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -137,8 +146,13 @@ class PreferencesFragment : PreferenceFragmentCompat(),
                 ).toToast(requireContext())
             }
             getString(R.string.active_fragments_pref) -> showActiveFragmentsDialog()
+            getString(R.string.equalizer_pref)->showEqualizer()
         }
         return false
+    }
+
+    private fun showEqualizer() {
+        (activity as? MainActivity)?.openEqualizerDialog()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {

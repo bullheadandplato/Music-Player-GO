@@ -106,4 +106,6 @@
 
     <!-- Preferences - Filters -->
     <string name="filter_pref_title">Filters</string>
+    <string name="equalizer_pref">equalizer_pref</string>
+    <string name="Equalizer">Equalizer</string>
 </resources>
