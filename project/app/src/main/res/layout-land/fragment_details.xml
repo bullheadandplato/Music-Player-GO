@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
@@ -11,7 +12,7 @@
         android:id="@+id/details_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?android:attr/windowBackground"
+        android:background="@color/windowBackground"
         android:theme="@style/ToolbarStyle"
         app:collapseIcon="@drawable/ic_navigate_before"
         app:navigationIcon="@drawable/ic_navigate_before"
@@ -35,45 +36,74 @@
 
         <!-- SELECTED ALBUM -->
         <LinearLayout
-            android:id="@+id/selected_album_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/ripple"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/selected_album"
+            <LinearLayout
+                android:id="@+id/selected_album_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="marquee"
-                android:fontFamily="@font/raleway_bold_italic"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:textAlignment="center"
-                android:textAppearance="@android:style/TextAppearance.Material.Subhead"
-                android:textColor="?colorPrimary" />
+                android:background="@drawable/ripple"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/album_year_duration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="4dp"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:singleLine="true"
-                android:textAppearance="@android:style/TextAppearance.Material.Caption"
-                android:textColor="?android:attr/textColorSecondary" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/selected_album"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="marquee"
+                        android:fontFamily="@font/source_sans_pro_black"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:paddingStart="12dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="12dp"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                        android:textColor="?colorPrimary" />
+
+                    <TextView
+                        android:id="@+id/album_year_duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="4dp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingBottom="4dp"
+                        android:singleLine="true"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                        android:textColor="?android:attr/textColorSecondary" />
+
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/sort_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="8dp"
+                    android:background="?android:attr/actionBarItemBackground"
+                    android:padding="8dp"
+                    app:srcCompat="@drawable/ic_sort_numeric_descending"
+                    tools:ignore="ContentDescription" />
+            </LinearLayout>
 
             <!-- DISC SONGS -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/songs_rv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2"
                 android:overScrollMode="never"
                 android:scrollbars="none" />
         </LinearLayout>

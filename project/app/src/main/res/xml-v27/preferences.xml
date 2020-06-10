@@ -19,7 +19,7 @@
 
     <Preference
         android:summary="@string/open_git_pref_summary"
-        app:icon="@drawable/ic_github_circle"
+        app:icon="@drawable/ic_code"
         app:key="@string/open_git_pref"
         app:title="@string/open_git_pref_title" />
 
@@ -29,9 +29,14 @@
         app:key="@string/faq_pref"
         app:title="@string/faq_title" />
 
+    <Preference
+        android:enabled="false"
+        app:icon="@drawable/ic_database"
+        app:key="@string/found_songs_pref" />
+
     <PreferenceCategory
         app:layout="@layout/custom_preference_category"
-        app:title="@string/category_appearance">
+        app:title="@string/category_ui">
 
         <ListPreference
             android:defaultValue="@string/theme_pref_light"
@@ -44,39 +49,29 @@
 
         <Preference
             app:enableCopying="true"
-            app:icon="@drawable/ic_circle"
+            app:icon="@drawable/ic_colorize"
             app:key="@string/accent_pref"
             app:title="@string/accent_pref_title" />
 
         <SwitchPreferenceCompat
             android:summaryOff="@string/edge_pref_summary_off"
-            app:defaultValue="true"
-            app:dialogTitle="@string/edge_pref_title"
+            app:defaultValue="false"
             app:key="@string/edge_pref"
             app:summaryOn="@string/edge_pref_summary_on"
             app:title="@string/edge_pref_title" />
+
+        <Preference
+            app:key="@string/active_fragments_pref"
+            app:title="@string/active_fragments_pref_title" />
     </PreferenceCategory>
 
     <PreferenceCategory
         app:layout="@layout/custom_preference_category"
         app:title="@string/category_general">
 
-        <Preference
-            app:key="@string/active_fragments_pref"
-            app:title="@string/active_fragments_pref_title" />
-
-        <SwitchPreferenceCompat
-            android:summaryOff="@string/tabs_pref_summary_off"
-            app:defaultValue="true"
-            app:dialogTitle="@string/tabs_pref_title"
-            app:key="@string/tabs_pref"
-            app:summaryOn="@string/tabs_pref_summary_on"
-            app:title="@string/tabs_pref_title" />
-
         <SwitchPreferenceCompat
             android:summaryOff="@string/precise_volume_pref_summary_off"
             app:defaultValue="true"
-            app:dialogTitle="@string/precise_volume_pref_title"
             app:key="@string/precise_volume_pref"
             app:summaryOn="@string/precise_volume_pref_summary_on"
             app:title="@string/precise_volume_pref_title" />
@@ -84,7 +79,6 @@
         <SwitchPreferenceCompat
             android:summaryOff="@string/focus_pref_summary_off"
             app:defaultValue="true"
-            app:dialogTitle="@string/focus_pref_title"
             app:key="@string/focus_pref"
             app:summaryOn="@string/focus_pref_summary_on"
             app:title="@string/focus_pref_title" />
@@ -92,9 +86,12 @@
         <SwitchPreferenceCompat
             android:summaryOff="@string/headset_pref_summary_off"
             app:defaultValue="true"
-            app:dialogTitle="@string/headset_pref_title"
             app:key="@string/headset_pref"
             app:summaryOn="@string/headset_pref_summary_on"
             app:title="@string/headset_pref_title" />
+
+        <Preference
+            app:key="@string/filter_pref"
+            app:title="@string/filter_pref_title" />
     </PreferenceCategory>
 </androidx.preference.PreferenceScreen>

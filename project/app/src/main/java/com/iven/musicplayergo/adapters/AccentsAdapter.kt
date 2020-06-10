@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.recyclerview.widget.RecyclerView
 import com.iven.musicplayergo.R
+import com.iven.musicplayergo.extensions.handleViewVisibility
 import com.iven.musicplayergo.goPreferences
-import com.iven.musicplayergo.ui.ThemeHelper
+import com.iven.musicplayergo.helpers.ThemeHelper
 
 class AccentsAdapter(private val activity: Activity) :
     RecyclerView.Adapter<AccentsAdapter.AccentsHolder>() {
@@ -26,9 +27,7 @@ class AccentsAdapter(private val activity: Activity) :
         )
     }
 
-    override fun getItemCount(): Int {
-        return mAccents.size
-    }
+    override fun getItemCount() = mAccents.size
 
     override fun onBindViewHolder(holder: AccentsHolder, position: Int) {
         holder.bindItems(mAccents[holder.adapterPosition].first)
@@ -45,24 +44,20 @@ class AccentsAdapter(private val activity: Activity) :
                     context,
                     color,
                     R.color.deep_purple
-                ).apply { ThemeHelper.updateIconTint(circle, this) }
+                ).apply {
+                    ThemeHelper.updateIconTint(circle, this)
+                    ThemeHelper.createColouredRipple(activity, this, R.drawable.ripple_oval)
+                        ?.apply {
+                            itemView.background = this
+                        }
+                }
 
-                itemView.findViewById<ImageButton>(R.id.check).visibility =
-                    if (color != mSelectedAccent)
-                        View.GONE
-                    else
-                        View.VISIBLE
+                findViewById<ImageButton>(R.id.check).handleViewVisibility(color == mSelectedAccent)
 
                 setOnClickListener {
-
                     if (mAccents[adapterPosition].first != mSelectedAccent) {
-
                         mSelectedAccent = mAccents[adapterPosition].first
                         goPreferences.accent = mSelectedAccent
-
-                        ThemeHelper.applyNewThemeSmoothly(
-                            activity
-                        )
                     }
                 }
             }

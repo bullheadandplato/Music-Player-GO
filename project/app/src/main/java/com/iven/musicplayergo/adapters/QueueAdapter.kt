@@ -8,11 +8,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.iven.musicplayergo.R
-import com.iven.musicplayergo.music.Music
-import com.iven.musicplayergo.music.MusicUtils
+import com.iven.musicplayergo.enums.LaunchedBy
+import com.iven.musicplayergo.extensions.toFormattedDuration
+import com.iven.musicplayergo.helpers.DialogHelper
+import com.iven.musicplayergo.helpers.ThemeHelper
+import com.iven.musicplayergo.models.Music
 import com.iven.musicplayergo.player.MediaPlayerHolder
-import com.iven.musicplayergo.ui.ThemeHelper
-import com.iven.musicplayergo.ui.Utils
 
 class QueueAdapter(
     context: Context,
@@ -41,16 +42,14 @@ class QueueAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QueueHolder {
         return QueueHolder(
             LayoutInflater.from(parent.context).inflate(
-                R.layout.song_item_alt,
+                R.layout.music_item,
                 parent,
                 false
             )
         )
     }
 
-    override fun getItemCount(): Int {
-        return mQueueSongs.size
-    }
+    override fun getItemCount() = mQueueSongs.size
 
     override fun onBindViewHolder(holder: QueueHolder, position: Int) {
         holder.bindItems(mQueueSongs[holder.adapterPosition])
@@ -78,7 +77,8 @@ class QueueAdapter(
                     }
                 }
 
-                duration.text = MusicUtils.formatSongDuration(song.duration, false)
+                duration.text =
+                    song.duration.toFormattedDuration(isAlbum = false, isSeekBar = false)
                 subtitle.text =
                     context.getString(R.string.artist_and_album, song.artist, song.album)
 
@@ -97,21 +97,23 @@ class QueueAdapter(
                         mediaPlayerHolder.setCurrentSong(
                             song,
                             queueSongs,
-                            true
+                            isFromQueue = true,
+                            isFolderAlbum = LaunchedBy.ArtistView
                         )
                         initMediaPlayer(song)
                     }
                 }
 
                 setOnLongClickListener {
-                    if (title.currentTextColor != ThemeHelper.resolveThemeAccent(context))
-                        Utils.showDeleteQueueSongDialog(
+                    if (title.currentTextColor != ThemeHelper.resolveThemeAccent(context)) {
+                        DialogHelper.showDeleteQueueSongDialog(
                             context,
                             Pair(song, adapterPosition),
                             queueSongsDialog,
                             this@QueueAdapter,
                             mediaPlayerHolder
                         )
+                    }
                     return@setOnLongClickListener true
                 }
             }

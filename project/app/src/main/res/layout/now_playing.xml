@@ -16,14 +16,14 @@
         android:orientation="vertical"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        tools:context=".MainActivity">
+        tools:context=".ui.MainActivity">
 
         <TextView
             android:id="@+id/np_song"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
-            android:fontFamily="@font/raleway_bold"
+            android:fontFamily="@font/source_sans_pro_black"
             android:marqueeRepeatLimit="marquee_forever"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
@@ -31,7 +31,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.Material.Title"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
@@ -45,7 +45,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:textColor="?android:attr/textColorSecondary" />
     </LinearLayout>
 
@@ -57,8 +57,8 @@
             android:id="@+id/np_seek_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="false"
-            android:focusable="false"
+            android:clickable="true"
+            android:focusable="true"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
             android:progressDrawable="@drawable/seekbar_np_track"
@@ -72,9 +72,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:alpha="0.5"
-            android:fontFamily="@font/raleway_bold_italic"
+            android:text="@string/unknown_year"
             android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.Material.Caption"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             android:textColor="?android:attr/textColorPrimary" />
     </FrameLayout>
 
@@ -91,7 +91,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:textAlignment="textStart"
-            android:textAppearance="@android:style/TextAppearance.Material.Caption"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             android:textColor="?android:attr/textColorSecondary" />
 
         <TextView
@@ -102,7 +102,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:textAlignment="textEnd"
-            android:textAppearance="@android:style/TextAppearance.Material.Caption"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             android:textColor="?android:attr/textColorSecondary" />
 
     </LinearLayout>
